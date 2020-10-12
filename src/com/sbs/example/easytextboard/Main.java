@@ -2,15 +2,26 @@ package com.sbs.example.easytextboard;
 
 public class Main {
 	public static void main(String[] args) {
-		String command = "article list";
+		String command = "Aticle add";
 		
-		if (command.equals("article add")) {
-			System.out.println("게시물 등록");
+		if (command.equals("Aticle add")) {
+			System.out.println("게시물 추가");
+		}
+
+		if (command.equals("Aticle subject")) {
+			System.out.println("게시물 제목");
 		}
 		
-		if (command.equals("article list")) {
-			System.out.println("게시물 리스트");
-		}
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		//System.out.println("안녕");
 		//int x = 5; 
 		//System.out.println(x);
