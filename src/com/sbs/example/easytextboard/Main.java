@@ -1,41 +1,22 @@
 package com.sbs.example.easytextboard;
 
-public class Main {
-	public static void main(String[] args) {
-		String command = "Aticle add";
-		
-		if (command.equals("Aticle add")) {
-			System.out.println("게시물 추가");
-		}
+import java.util.Scanner;
 
-		if (command.equals("Aticle subject")) {
-			System.out.println("게시물 제목");
+public class Main {
+	private static Scanner scanner;
+
+	public static void main(String[] args) {
+		scanner = new Scanner(System.in);
+
+		System.out.printf("명령어>>");
+		String command = scanner.nextLine();
+
+		if (command.equals("article add")) {
+			System.out.println("게시물 등록");
+		} else if (command.equals("article list")) {
+			System.out.println("게시물 목록");
+		} else {
+			System.out.println("존재하지 않는 명령어");
 		}
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//System.out.println("안녕");
-		//int x = 5; 
-		//System.out.println(x);
-		
-		//int k = 20;
-		//String command = "article add";
-		//System.out.println(command);
-		
-		//if ( 10 > 5 ) { //if소중
-		//		System.out.println("참");
-			//}
-		
-		//if ( command.equals("article list")) { //if소중
-		//	System.out.println("참");	
-		//}
 	}
 }
