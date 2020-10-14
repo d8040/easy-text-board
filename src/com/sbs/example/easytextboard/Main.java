@@ -4,72 +4,86 @@ import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		//1번 게시물 저장소
-		int article1__id = 0;
-		String article1__title = "";
-		String article1__body = "";
-		//2번 게시물 저장소
-		int article2__id = 0;
-		String article2__title = "";
-		String article2__body = "";
 		
-		int lastArticleId = 0;
+		Scanner scanner = new Scanner(System.in);
+		int no = 0;
+		
+		int id1 = 0;
+		String co1 = "";
+		String sub1 = "";
 
+		int id2 = 0;
+		String co2 = "";
+		String sub2 = "";
+		
 		while (true) {
 			System.out.printf("명령어) ");
 			String command = scanner.nextLine();
 
 			if (command.equals("add")) {
-
-				int id = 1 + lastArticleId;
-				String title;
-				String body;
-
-				System.out.println("==게시물 추가==");
+				System.out.println("==게시물 등록==");
+				
+				int id = no+1;
+				String sub;
+				String co;
+				
 				System.out.printf("제목: ");
-				title = scanner.nextLine();
+				sub = scanner.nextLine();
 				System.out.printf("내용: ");
-				body = scanner.nextLine();
-
-				lastArticleId = id;
+				co = scanner.nextLine();
+				System.out.println(id+"번 게시물에 저장 되었습니다.");
+				
+				no = id;
 				
 				if (id == 1) {
-					article1__id = id;
-					article1__title = title;
-					article1__body = body;					
+					sub1 = sub;
+					co1 = co;
+					id1 = id;
 				}
-				if (id == 2) {
-					article2__id = id;
-					article2__title = title;
-					article2__body = body;					
-				}
-
-				System.out.println(id + "번 게시물이 생성되었습니다.");
-
-			} else if (command.equals("list")) {
-				System.out.println("==게시물 목록==");
 				
-				if (lastArticleId == 0) {
-					System.out.println("게시물이 없습니다.");
-					continue; //이번턴을 지속 하겠다는 명령어
+				if (id == 2) {
+					sub2 = sub;
+					co2 = co;
+					id2 = id;
+				}
+				
+			} else if (command.equals("list")) {
+				System.out.println("==게시물 리스트==");
+				if (no == 0) {
+					System.out.println("저장된 게시물이 없습니다.");
+					continue;
 				}
 				System.out.println("번호 / 제목");
+				if(no >= 1) {
+					System.out.println(id1 + " / " + sub1);
+				}
+				if(no >= 2) {
+					System.out.println(id2 + " / " + sub2);
+				}
 				
-				if (lastArticleId >= 1) {
-					System.out.printf("%d / %s\n", article1__id, article1__title);
+			} else if (command.equals("detail")) {
+				System.out.println("==게시물 상세==");
+				if (no == 0) {
+					System.out.println("저장된 게시물이 없습니다.");
+					continue;
 				}
-				if (lastArticleId >= 2) {
-					System.out.printf("%d / %s\n", article2__id, article2__title);
+				if(no >= 1) {
+					System.out.println("번호: "+ id1);
+					System.out.println("제목: "+ sub1);
+					System.out.println("내용: "+ co1);
 				}
+				if(no >= 2) {
+					System.out.println("번호: "+ id2);
+					System.out.println("제목: "+ sub2);
+					System.out.println("내용: "+ co2);
+				}
+				
 			} else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
 				break;
 			} else {
 				System.out.println("==명령어 오류==");
 			}
-
 		}
-		scanner.close();
 	}
 }
