@@ -67,18 +67,30 @@ public class Main {
 					System.out.println("저장된 게시물이 없습니다.");
 					continue;
 				}
-				if(no >= 1) {
-					System.out.println("번호: "+ id1);
-					System.out.println("제목: "+ sub1);
-					System.out.println("내용: "+ co1);
-				}
-				if(no >= 2) {
-					System.out.println("번호: "+ id2);
-					System.out.println("제목: "+ sub2);
-					System.out.println("내용: "+ co2);
-				}
 				
-			} else if (command.equals("exit")) {
+				
+			} 
+			else if(command.equals("detail1")) {
+				if (no == 0) {
+					System.out.println("저장된 게시물이 없습니다.");
+					continue;
+				}
+				System.out.println("==게시물 상세==");
+				System.out.println("번호: "+ id1);
+				System.out.println("제목: "+ sub1);
+				System.out.println("내용: "+ co1);
+			}
+			else if(command.equals("detail2")) {
+				if (no <= 1) {
+					System.out.println("저장된 게시물이 없습니다.");
+					continue;
+				}
+				System.out.println("==게시물 상세==");
+				System.out.println("번호: "+ id2);
+				System.out.println("제목: "+ sub2);
+				System.out.println("내용: "+ co2);
+			}
+			else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
 				break;
 			} else {
