@@ -4,19 +4,15 @@ import java.util.Scanner;
 
 public class App {
 	Scanner scanner = new Scanner(System.in);
-	Article[] article = new Article[11];
+	Article[] articles = new Article[11];
 
 	public Article getArticle(int id) {
-		for (int i = 1; i <= id; i++) {
-
-			return article[id];
-		}
-		return null;
+		return articles[id - 1];
 	}
 
 	public void run() {
-		for (int i = 0; i < article.length; i++) {
-			article[i] = new Article();
+		for (int i = 0; i < articles.length; i++) {
+			articles[i] = new Article();
 		}
 
 		int no = 0;
@@ -101,6 +97,7 @@ public class App {
 				System.out.println("명령어 오류");
 			}
 		}
+		
 		scanner.close();
 	}
 }
