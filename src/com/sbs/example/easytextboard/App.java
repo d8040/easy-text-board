@@ -88,24 +88,12 @@ public class App {
 					continue;
 				}
 
-
-//				Article delArticles = getArticle(inputId + 1);
-//				articles.con = delArticles.con;
-//				articles.sub = delArticles.sub;
-//				articles.no = delArticles.no;
 				for (int i = inputId; i < no; i++) {
 					articles[i] = articles[i+1];
-//					Article articles = getArticle(inputId);
-//					articles.con = articles.con+1;
-//					articles.sub = articles.sub+1;
-//					articles.no = articles.no+1;
+					articles[i].no = articles[i].no-1;
 					
-
-//				System.out.println(getArticle(i).con);
-//				System.out.println(getArticle(i).sub);
-//				System.out.println(getArticle(i).no);
 				}
-//				no--;
+				no--;
 
 			} else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
