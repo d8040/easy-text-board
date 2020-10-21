@@ -78,10 +78,10 @@ public class App {
 					continue;
 				}
 
-				Article detailArticle = getArticle(inputId);
-				System.out.println("번호: " + detailArticle.no);
-				System.out.println("제목: " + detailArticle.sub);
-				System.out.println("내용: " + detailArticle.con);
+				Article article = getArticle(inputId);
+				System.out.println("번호: " + article.no);
+				System.out.println("제목: " + article.sub);
+				System.out.println("내용: " + article.con);
 
 			}
 
@@ -98,10 +98,9 @@ public class App {
 					continue;
 				}
 
-				for (int i = inputId; i < no; i++) {
-					articles[i - 1].sub = articles[i].sub;
-					articles[i - 1].con = articles[i].con;
-					articles[i - 1].no = articles[i].no;
+				for (int i = inputId ; i < size(); i++) {
+					articles[i - 1] = articles[i];
+				
 
 				}
 				size--;
