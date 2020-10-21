@@ -5,14 +5,15 @@ import java.util.Scanner;
 public class App {
 
 	Scanner scan = new Scanner(System.in);
-	Article[] articles = new Article[3]; 		// Article[]: articles이라는 리모컨을 조정 할 수 있는 리모컨 생성
+	Article[] articles = new Article[5]; // Article[]: articles이라는 리모컨을 조정 할 수 있는 리모컨 생성
 
 	Article getArticle(int id) {
-		return articles[id-1];
+		return articles[id - 1];
 	}
 
 	int no = 0;
 	int size = 0;
+
 	int size() {
 		return size;
 	}
@@ -32,21 +33,19 @@ public class App {
 					System.out.println("더 이상 게시물을 저장 할 수 없습니다.");
 					continue;
 				}
-				
-				
+
 				System.out.printf("제목: ");
 				String sub = scan.nextLine();
 				System.out.printf("내용: ");
 				String con = scan.nextLine();
 				System.out.println(id + "번 게시물이 생성되었습니다.");
 				no = id;
-				
-				
+
 				Article article = new Article();
 				article.sub = sub;
 				article.con = con;
-				article.no = no;	
-				
+				article.no = no;
+
 				articles[size] = article;
 				size++;
 			}
@@ -64,17 +63,17 @@ public class App {
 					Article article = getArticle(i);
 					System.out.println(article.no + " / " + article.sub);
 				}
-			} 
-			
+			}
+
 			else if (command.equals("detail ")) {
 				System.out.println("**명령어 오류");
-			} 
-			
+			}
+
 			else if (command.startsWith("detail ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 상세==");
 
-				if (no <= 0 || inputId > no || inputId == 0) {
+				if (no <= 0 || inputId > size() || inputId == 0) {
 					System.out.println(inputId + "번 게시물이 없습니다.");
 					continue;
 				}
@@ -86,11 +85,11 @@ public class App {
 
 			}
 
-			else if (command.equals("delete ")) {
+			else if (command.equals("del ")) {
 				System.out.println("**명령어 오류");
 			}
 
-			else if (command.startsWith("delete ")) {
+			else if (command.startsWith("del ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println(" ==게시물 삭제==");
 
@@ -100,14 +99,41 @@ public class App {
 				}
 
 				for (int i = inputId; i < no; i++) {
-					articles[i-1].sub = articles[i].sub;
-					articles[i-1].con = articles[i].con;
-					articles[i-1].no = articles[i].no;
+					articles[i - 1].sub = articles[i].sub;
+					articles[i - 1].con = articles[i].con;
+					articles[i - 1].no = articles[i].no;
 
 				}
 				size--;
+				System.out.println(inputId + "번 게시물이 삭제되었습니다.");
 
-			} else if (command.equals("exit")) {
+			}
+
+			else if (command.startsWith("modify ")) {
+				int inputId = Integer.parseInt(command.split(" ")[1]);
+				System.out.println("==게시물 수정==");
+
+				if (no <= 0 || inputId > size() || inputId == 0) {
+					System.out.println(inputId + "번 게시물이 없습니다.");
+					continue;
+				}
+				
+				Article article = getArticle(inputId);
+
+				System.out.println("게시물 번호: " + article.no);
+				System.out.printf("수정제목: ");
+				String sub = scan.nextLine();
+				System.out.printf("수정내용: ");
+				String con = scan.nextLine();
+
+				System.out.println(inputId + "번 게시물이 수정 되었습니다.");
+
+				article.sub = sub;
+				article.con = con;
+
+			}
+
+			else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
 				break;
 			}
