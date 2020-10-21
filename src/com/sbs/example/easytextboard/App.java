@@ -5,18 +5,19 @@ import java.util.Scanner;
 public class App {
 
 	Scanner scan = new Scanner(System.in);
-	Article[] articles = new Article[11]; 		// Article[]: articles이라는 리모컨을 조정 할 수 있는 리모컨 생성
+	Article[] articles = new Article[3]; 		// Article[]: articles이라는 리모컨을 조정 할 수 있는 리모컨 생성
 
 	Article getArticle(int id) {
-		return articles[id];
+		return articles[id-1];
 	}
 
 	int no = 0;
+	int size = 0;
+	int size() {
+		return size;
+	}
 
 	public void run() {
-		for (int i = 0; i < articles.length; i++) {
-			articles[i] = new Article();
-		}
 
 		while (true) {
 			System.out.printf("명령어) ");
@@ -27,21 +28,27 @@ public class App {
 
 				int id = no + 1;
 
-				if (id >= articles.length) {
+				if (size() >= articles.length) {
 					System.out.println("더 이상 게시물을 저장 할 수 없습니다.");
 					continue;
 				}
+				
+				
 				System.out.printf("제목: ");
 				String sub = scan.nextLine();
 				System.out.printf("내용: ");
 				String con = scan.nextLine();
 				System.out.println(id + "번 게시물이 생성되었습니다.");
 				no = id;
-
-				Article articles = getArticle(id);
-				articles.sub = sub;
-				articles.con = con;
-				articles.no = no;
+				
+				
+				Article article = new Article();
+				article.sub = sub;
+				article.con = con;
+				article.no = no;	
+				
+				articles[size] = article;
+				size++;
 			}
 
 			else if (command.equals("list")) {
@@ -53,13 +60,17 @@ public class App {
 				}
 				System.out.println("번호 / 제목");
 
-				for (int i = 1; i <= no; i++) {
-					Article articles = getArticle(i);
-					System.out.println(articles.no + " / " + articles.sub);
+				for (int i = 1; i <= size(); i++) {
+					Article article = getArticle(i);
+					System.out.println(article.no + " / " + article.sub);
 				}
-			} else if (command.equals("detail ")) {
+			} 
+			
+			else if (command.equals("detail ")) {
 				System.out.println("**명령어 오류");
-			} else if (command.startsWith("detail ")) {
+			} 
+			
+			else if (command.startsWith("detail ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 상세==");
 
@@ -89,11 +100,12 @@ public class App {
 				}
 
 				for (int i = inputId; i < no; i++) {
-					articles[i] = articles[i+1];
-					articles[i].no = articles[i].no-1;
-					
+					articles[i-1].sub = articles[i].sub;
+					articles[i-1].con = articles[i].con;
+					articles[i-1].no = articles[i].no;
+
 				}
-				no--;
+				size--;
 
 			} else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
