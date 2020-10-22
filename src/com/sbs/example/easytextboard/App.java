@@ -5,35 +5,82 @@ import java.util.Scanner;
 public class App {
 
 	Scanner scan = new Scanner(System.in);
-	private Article[] articles = new Article[5]; 
-	
-	private int no = 0;
-	private int size = 0;	
+	private Article[] articles = new Article[5];
+
+	private int no;
+	private int size;
 
 	private int size() {
 		return size;
 	}
 
+	public App() { 				// init 초기 실행 클래스
+		no = 0;
+		size = 0;
+		for (int i = 0; i < 32; i++) {
+			add(i + 1 + "", i + 1 + "");
+		}
+
+	}
+
 	private Article getArticle(int id) {
 		int index = getIndexById(id);
-		
+
 		if (index == -1) {
 			return null;
 		}
-		
+
 		return articles[index];
 	}
-	
+
 	private int getIndexById(int id) {
-		for (int i = 0 ; i < size(); i++) {
+		for (int i = 0; i < size(); i++) {
 			if (articles[i].no == id) {
 				return i;
 			}
 		}
-		
 		return -1;
+
 	}
 
+	private int add(String sub, String con) {
+		Article[] newArticles = new Article[articles.length + 5];
+
+		for (int i = 0; i < articles.length; i++) {
+			newArticles[i] = articles[i];
+		}
+
+		articles = newArticles;
+
+		Article article = new Article();
+		article.sub = sub;
+		article.con = con;
+		article.no = no + 1;
+
+		articles[size] = article;
+		size++;
+		no = article.no;
+
+		return article.no;
+
+	}
+
+	private void remove(int id) {
+
+		for (int i = id; i < size(); i++) {
+			articles[i - 1] = articles[i];
+
+		}
+		size--;
+
+	}
+
+	private void modify(int id, String sub, String con) {
+
+		Article article = getArticle(id);
+		article.sub = sub;
+		article.con = con;
+	}
 
 	public void run() {
 
@@ -42,31 +89,16 @@ public class App {
 			String command = scan.nextLine();
 
 			if (command.equals("add")) {
-				System.out.println("==게시물 등록==");				
-
-				Article[] newArticles = new Article[articles.length +5];
-				
-				for (int i = 0 ; i < articles.length ; i++) {
-					newArticles[i] = articles[i];
-				}
-				
-				articles = newArticles;
+				System.out.println("==게시물 등록==");
 
 				System.out.printf("제목: ");
 				String sub = scan.nextLine();
 				System.out.printf("내용: ");
-				String con = scan.nextLine();				
+				String con = scan.nextLine();
 
-				Article article = new Article();
-				article.sub = sub;
-				article.con = con;
-				article.no = no + 1;
-				
-				System.out.println(article.no + "번 게시물이 생성되었습니다.");
-				
-				articles[size] = article;
-				size++;
-				no = article.no;
+				int no = add(sub, con);
+				System.out.println(no + "번 게시물이 생성되었습니다.");
+
 			}
 
 			else if (command.equals("list")) {
@@ -78,9 +110,11 @@ public class App {
 				}
 				System.out.println("번호 / 제목");
 
-				for (int i = 0; i <= size()-1; i++) {
+//				if (command.equals("list 1")) {
+
+				for (int i = size()-11 ; i >= 0; i--) {
 					Article article = articles[i];
-					
+
 					System.out.println(article.no + " / " + article.sub);
 				}
 			}
@@ -92,14 +126,14 @@ public class App {
 			else if (command.startsWith("detail ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 상세==");
-				
+
 				Article article = getArticle(inputId);
-				
+
 				if (article == null) {
 					System.out.println(inputId + "번 게시물이 없습니다.");
 					continue;
 				}
-				
+
 				System.out.println("번호: " + article.no);
 				System.out.println("제목: " + article.sub);
 				System.out.println("내용: " + article.con);
@@ -119,11 +153,8 @@ public class App {
 					continue;
 				}
 
-				for (int i = inputId; i < size(); i++) {
-					articles[i - 1] = articles[i];
+				remove(inputId);
 
-				}
-				size--;
 				System.out.println(inputId + "번 게시물이 삭제되었습니다.");
 
 			}
@@ -133,7 +164,7 @@ public class App {
 				System.out.println("==게시물 수정==");
 
 				Article article = getArticle(inputId);
-				
+
 				if (article == null) {
 					System.out.println(inputId + "번 게시물이 없습니다.");
 					continue;
@@ -147,8 +178,7 @@ public class App {
 
 				System.out.println(inputId + "번 게시물이 수정 되었습니다.");
 
-				article.sub = sub;
-				article.con = con;
+				modify(inputId, sub, con);
 
 			}
 
@@ -163,4 +193,5 @@ public class App {
 		}
 		scan.close();
 	}
+
 }
