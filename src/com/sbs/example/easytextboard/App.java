@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class App {
 
 	Scanner scan = new Scanner(System.in);
-	private Article[] articles = new Article[5]; // Article[]: articles이라는 리모컨을 조정 할 수 있는 리모컨 생성
+	private Article[] articles = new Article[5]; 
 	
 	private int no = 0;
 	private int size = 0;	
@@ -44,10 +44,13 @@ public class App {
 			if (command.equals("add")) {
 				System.out.println("==게시물 등록==");				
 
-				if (size() >= articles.length) {
-					System.out.println("더 이상 게시물을 저장 할 수 없습니다.");
-					continue;
+				Article[] newArticles = new Article[articles.length +5];
+				
+				for (int i = 0 ; i < articles.length ; i++) {
+					newArticles[i] = articles[i];
 				}
+				
+				articles = newArticles;
 
 				System.out.printf("제목: ");
 				String sub = scan.nextLine();
