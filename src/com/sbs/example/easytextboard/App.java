@@ -26,7 +26,7 @@ public class App {
 	
 	private int getIndexById(int id) {
 		for (int i = 0 ; i < size(); i++) {
-			if (articles[i].no == no) {
+			if (articles[i].no == id) {
 				return i;
 			}
 		}
@@ -89,13 +89,14 @@ public class App {
 			else if (command.startsWith("detail ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 상세==");
-
-				if (no <= 0 || inputId > size() || inputId == 0) {
+				
+				Article article = getArticle(inputId);
+				
+				if (article == null) {
 					System.out.println(inputId + "번 게시물이 없습니다.");
 					continue;
 				}
-
-				Article article = articles[inputId-1];
+				
 				System.out.println("번호: " + article.no);
 				System.out.println("제목: " + article.sub);
 				System.out.println("내용: " + article.con);
@@ -115,7 +116,7 @@ public class App {
 					continue;
 				}
 
-				for (int i = inputId +1; i < size(); i++) {
+				for (int i = inputId; i < size(); i++) {
 					articles[i - 1] = articles[i];
 
 				}
@@ -128,12 +129,12 @@ public class App {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 수정==");
 
-				if (no <= 0 || inputId > size() || inputId == 0) {
+				Article article = getArticle(inputId);
+				
+				if (article == null) {
 					System.out.println(inputId + "번 게시물이 없습니다.");
 					continue;
 				}
-
-				Article article = getArticle(inputId);
 
 				System.out.println("게시물 번호: " + article.no);
 				System.out.printf("수정제목: ");
