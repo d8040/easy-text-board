@@ -101,6 +101,34 @@ public class App {
 
 			}
 
+			else if (command.startsWith("list ")) {
+				int inputId = Integer.parseInt(command.split(" ")[1]);
+				
+				System.out.println("==페이지 표시==");
+
+				if (size() == 0) {
+					System.out.println("저장된 게시물이 없습니다.");
+					continue;
+				}
+				System.out.println("번호 / 제목");
+				
+				int page = 10;
+				int startPos = size() -1;
+
+
+
+
+				for (int i = size()-1 ; i >= ((size()-1)*((inputId-1)*10))-(10-1); i--) {
+					if (i < 0) {
+						i = 0;
+					}
+					
+					Article article = articles[i];
+
+					System.out.println(article.no + " / " + article.sub);
+				}
+			}
+			
 			else if (command.equals("list")) {
 				System.out.println("==게시물 리스트==");
 
@@ -110,9 +138,9 @@ public class App {
 				}
 				System.out.println("번호 / 제목");
 
-//				if (command.equals("list 1")) {
 
-				for (int i = size()-11 ; i >= 0; i--) {
+
+				for (int i = size()-1 ; i >= 0; i--) {
 					Article article = articles[i];
 
 					System.out.println(article.no + " / " + article.sub);
