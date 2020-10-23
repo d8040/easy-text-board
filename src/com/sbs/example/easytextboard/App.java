@@ -14,7 +14,7 @@ public class App {
 		return size;
 	}
 
-	public App() { 				// init 초기 실행 클래스
+	public App() { // init 초기 실행 클래스
 		no = 0;
 		size = 0;
 		for (int i = 0; i < 32; i++) {
@@ -103,32 +103,38 @@ public class App {
 
 			else if (command.startsWith("list ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
-				
+
 				System.out.println("==페이지 표시==");
+
+				if (inputId <= 1) {
+					inputId = 1;
+				}
 
 				if (size() == 0) {
 					System.out.println("저장된 게시물이 없습니다.");
 					continue;
 				}
 				System.out.println("번호 / 제목");
-				
+
 				int page = 10;
-				int startPos = size() -1;
+				int startPos = size() - 1;
+				startPos -= (inputId - 1) * page;
+				int endPos = startPos - (page - 1);
 
+				if (endPos < 0) {
+					endPos = 0;
+				}
 
+				if (startPos < 0) {
+					System.out.println(inputId + "페이지가 존재하지 않습니다.");
+				}
 
-
-				for (int i = size()-1 ; i >= ((size()-1)*((inputId-1)*10))-(10-1); i--) {
-					if (i < 0) {
-						i = 0;
-					}
-					
+				for (int i = startPos; i >= endPos; i--) {
 					Article article = articles[i];
-
 					System.out.println(article.no + " / " + article.sub);
 				}
 			}
-			
+
 			else if (command.equals("list")) {
 				System.out.println("==게시물 리스트==");
 
@@ -138,9 +144,7 @@ public class App {
 				}
 				System.out.println("번호 / 제목");
 
-
-
-				for (int i = size()-1 ; i >= 0; i--) {
+				for (int i = size() - 1; i >= 0; i--) {
 					Article article = articles[i];
 
 					System.out.println(article.no + " / " + article.sub);
