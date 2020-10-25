@@ -52,7 +52,6 @@ public class App {
 		return article.no;
 	}
 
-
 	public void run() {
 
 		while (true) {
@@ -70,25 +69,25 @@ public class App {
 				int no = add(sub, con);
 				System.out.printf("%d 번 게시물이 생성되었습니다.\n", no);
 			}
-			
-			else if(command.startsWith("list ")) {
+
+			else if (command.startsWith("list ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
-				System.out.printf("==%s 페이지==\n",inputId);
+				System.out.printf("==%s 페이지==\n", inputId);
 
 				if (size() == 0) {
-					System.out.println(inputId+" 페이지에 게시물이 없습니다.");
+					System.out.println(inputId + " 페이지에 게시물이 없습니다.");
 					continue;
 				}
-				
+
 				if (inputId <= 1) {
 					inputId = 1;
 				}
-				
+
 				int page = 10;
-				int start = size() -1;
+				int start = size() - 1;
 				start -= (inputId - 1) * page;
 				int end = start - (page - 1);
-				
+
 				if (end < 0) {
 					end = 0;
 				}
@@ -118,44 +117,44 @@ public class App {
 					System.out.println(article.no + " / " + article.sub);
 				}
 			}
-			
-			else if(command.startsWith("detail ")) {
+
+			else if (command.startsWith("detail ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 상세==");
-				
+
 				Article article = getArticle(inputId);
-				
+
 				if (article == null) {
 					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", inputId);
 					continue;
 				}
-				
+
 				System.out.println("번호: " + article.no);
 				System.out.println("제목: " + article.sub);
 				System.out.println("내용: " + article.con);
 			}
-			
+
 			else if (command.startsWith("modify ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println("==게시물 수정==");
-				
+
 				Article article = getArticle(inputId);
-				
+
 				if (article == null) {
 					System.out.printf("%d번 게시물이 존재하지 않습니다.\n", inputId);
 				}
-				
+
 				System.out.printf("게시물 번호: %s\n", article.no);
 				System.out.printf("제목: ");
 				String sub = scan.nextLine();
 				System.out.printf("제목: ");
 				String con = scan.nextLine();
 				System.out.printf("%d번 게시물이 수정되었습니다.\n", article.no);
-				
+
 				article.sub = sub;
 				article.con = con;
 			}
-			
+
 			else if (command.startsWith("del ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
 				System.out.println(" ==게시물 삭제==");
@@ -171,33 +170,31 @@ public class App {
 				size--;
 
 				System.out.println(inputId + "번 게시물이 삭제되었습니다.");
-			}			
-			
+			}
+
 			else if (command.startsWith("search ")) {
 				String inputId = command.split(" ")[1];
 				System.out.println("==게시물 검색==");
-				
-/*				if (articles == null || inputId == null) {
-					System.out.printf("게시물이 존재하지 않습니다.\n");
-					continue;
-				}*/
-				
-				for (int i = 0; i < size(); i++) {						
-					if(inputId.equals(articles[i].sub)) {						
-						Article article = articles[i];
-					System.out.println(article.no + " / " + article.sub);
+
+				for (int i = 0; i < size(); i++) {
+					Article article = articles[i];
+					if (articles[i].sub.contains(inputId) || articles[i].con.contains(inputId)) {
+						System.out.println(article.no + " / " + article.sub);
 					}
-					else {
-						System.out.println("없음");
-					}
+
+//					else {
+//					if (!articles[i].sub.contains(inputId) || !articles[i].con.contains(inputId)) {
+//
+//						System.out.println("없음");
+//						return;
+//					}
+
 				}
-			}	
-			
-			else if(command.equals("exit")) {
+			} else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
 				break;
 			}
-			
+
 			else {
 				System.out.println("**명령어 오류");
 			}
