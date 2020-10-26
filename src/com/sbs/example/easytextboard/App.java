@@ -4,10 +4,21 @@ import java.util.Scanner;
 
 public class App {
 	Scanner scan = new Scanner(System.in);
-	private Article[] articles = new Article[5];
+	private Article[] articles;
 
-	private int no = 0;
-	private int size = 0;
+	private int no;
+	private int size;
+
+	public App() {
+		articles = new Article[32];
+		no = 0;
+		size = 0;
+
+		for (int i = 0; i < 32; i++) {
+			add("제목" + (i + 1), "내용" + (i + 1));
+		}
+
+	}
 
 	private int size() {
 		return size;
@@ -52,6 +63,31 @@ public class App {
 		return article.no;
 	}
 
+	private int listPage(int inputId) {
+		if (inputId <= 1) {
+			inputId = 1;
+		}
+
+		int page = 10;
+		int start = size() - 1;
+		start -= (inputId - 1) * page;
+		int end = start - (page - 1);
+
+		if (end < 0) {
+			end = 0;
+		}
+
+		for (int i = start; i >= end; i--) {
+			Article article = articles[i];
+
+			System.out.println(article.no + " / " + article.sub);
+		}
+		if (start < 0) {
+			System.out.println(inputId + "페이지는 존재하지 않습니다.");
+		}
+		return 0;
+	}
+
 	public void run() {
 
 		while (true) {
@@ -78,27 +114,10 @@ public class App {
 					System.out.println(inputId + " 페이지에 게시물이 없습니다.");
 					continue;
 				}
-
-				if (inputId <= 1) {
-					inputId = 1;
-				}
-
-				int page = 10;
-				int start = size() - 1;
-				start -= (inputId - 1) * page;
-				int end = start - (page - 1);
-
-				if (end < 0) {
-					end = 0;
-				}
-
 				System.out.println("번호 / 제목");
 
-				for (int i = start; i >= end; i--) {
-					Article article = articles[i];
+				int listNo = listPage(inputId);
 
-					System.out.println(article.no + " / " + article.sub);
-				}
 			}
 
 			else if (command.equals("list")) {
@@ -173,24 +192,77 @@ public class App {
 			}
 
 			else if (command.startsWith("search ")) {
-				String inputId = command.split(" ")[1];
+				String[] commandBits = command.split(" ");
+
+				String searchKeyword = commandBits[2];
+
+				int page = 1;
+
+				if (commandBits.length >= 4) {
+					page = Integer.parseInt(commandBits[2]);
+				}
+
+				if (page <= 1) {
+					page = 1;
+				}
 				System.out.println("==게시물 검색==");
 
-				for (int i = 0; i < size(); i++) {
-					Article article = articles[i];
-					if (articles[i].sub.contains(inputId) || articles[i].con.contains(inputId)) {
-						System.out.println(article.no + " / " + article.sub);
+				int searchResultAticleLen = 0;
+
+				for (Article article : articles) {
+					if (article.sub.contains(searchKeyword)) {
+						searchResultAticleLen++;
 					}
-
-//					else {
-//					if (!articles[i].sub.contains(inputId) || !articles[i].con.contains(inputId)) {
-//
-//						System.out.println("없음");
-//						return;
-//					}
-
 				}
-			} else if (command.equals("exit")) {
+				
+				Article[] searchResultArticles = new Article[searchResultAticleLen];
+				
+				int searchResultAticlesIndex = 0;
+				for (Article article : articles) {
+					if (article.sub.contains(searchKeyword)) {
+						searchResultArticles[searchResultAticlesIndex] =  article;
+						searchResultAticlesIndex++;
+					}
+				}
+				
+				if(searchResultArticles.length == 0) {
+					System.out.println("검색결과가 존재하지 않습니다.");
+				}
+
+			}
+
+//			else if (command.startsWith("search ")) {
+//				String inputId = command.split(" ")[1];
+//				int inputPage = Integer.parseInt(command.split(" ")[2]);
+//				System.out.println("==게시물 검색==");
+//
+//				if (inputPage <= 1) {
+//					inputPage = 1;
+//				}
+//
+//				int page = 10;
+//				int start = size() - 1;
+//				start -= (inputPage - 1) * page;
+//				int end = start - (page - 1);
+//
+//				if (end < 0) {
+//					end = 0;
+//				}
+//
+//				for (int i = start; i >= end; i--) {
+//					Article article = articles[i];
+//
+//					if (articles[i].sub.contains(inputId) || articles[i].con.contains(inputId)) {
+//						System.out.println(article.no + " / " + article.sub);
+//					}					
+//				}
+//				if (start <0) {
+//					System.out.println(inputId+"페이지는 존재하지 않습니다.");
+//				}
+//
+//			}
+
+			else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
 				break;
 			}
@@ -200,4 +272,5 @@ public class App {
 			}
 		}
 	}
+
 }
