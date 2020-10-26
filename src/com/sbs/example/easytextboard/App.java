@@ -64,6 +64,8 @@ public class App {
 	}
 
 	private int listPage(int inputId) {
+		System.out.printf("==%s 페이지==\n", inputId);
+
 		if (inputId <= 1) {
 			inputId = 1;
 		}
@@ -108,7 +110,6 @@ public class App {
 
 			else if (command.startsWith("list ")) {
 				int inputId = Integer.parseInt(command.split(" ")[1]);
-				System.out.printf("==%s 페이지==\n", inputId);
 
 				if (size() == 0) {
 					System.out.println(inputId + " 페이지에 게시물이 없습니다.");
@@ -138,7 +139,16 @@ public class App {
 			}
 
 			else if (command.startsWith("detail ")) {
-				int inputId = Integer.parseInt(command.split(" ")[1]);
+				int inputId = 0;
+				try {
+					inputId = Integer.parseInt(command.split(" ")[1]);
+				}
+
+				catch (NumberFormatException a) {
+					System.out.println("게시물 번호를 양의 정수로 입력해 주세요.");
+					continue;
+				}
+
 				System.out.println("==게시물 상세==");
 
 				Article article = getArticle(inputId);
@@ -154,7 +164,15 @@ public class App {
 			}
 
 			else if (command.startsWith("modify ")) {
-				int inputId = Integer.parseInt(command.split(" ")[1]);
+				int inputId = 0;
+				try {
+					inputId = Integer.parseInt(command.split(" ")[1]);
+				}
+
+				catch (NumberFormatException a) {
+					System.out.println("게시물 번호를 양의 정수로 입력해 주세요.");
+					continue;
+				}
 				System.out.println("==게시물 수정==");
 
 				Article article = getArticle(inputId);
@@ -175,7 +193,15 @@ public class App {
 			}
 
 			else if (command.startsWith("del ")) {
-				int inputId = Integer.parseInt(command.split(" ")[1]);
+				int inputId = 0;
+				try {
+					inputId = Integer.parseInt(command.split(" ")[1]);
+				}
+
+				catch (NumberFormatException a) {
+					System.out.println("게시물 번호를 양의 정수로 입력해 주세요.");
+					continue;
+				}
 				System.out.println(" ==게시물 삭제==");
 
 				if (no <= 0 || inputId > no) {
@@ -193,15 +219,11 @@ public class App {
 
 			else if (command.startsWith("search ")) {
 				String[] commandBits = command.split(" ");
-
-				String searchKeyword = commandBits[2];
-
+				String searchKeyword = commandBits[1];
 				int page = 1;
-
-				if (commandBits.length >= 4) {
+				if (commandBits.length >= 3) {
 					page = Integer.parseInt(commandBits[2]);
 				}
-
 				if (page <= 1) {
 					page = 1;
 				}
@@ -210,57 +232,54 @@ public class App {
 				int searchResultAticleLen = 0;
 
 				for (Article article : articles) {
-					if (article.sub.contains(searchKeyword)) {
+					if (article == null) {
+						break;
+					}
+
+					if (article.sub.contains(searchKeyword) || article.con.contains(searchKeyword)) {
 						searchResultAticleLen++;
 					}
 				}
-				
+
 				Article[] searchResultArticles = new Article[searchResultAticleLen];
-				
+
 				int searchResultAticlesIndex = 0;
 				for (Article article : articles) {
-					if (article.sub.contains(searchKeyword)) {
-						searchResultArticles[searchResultAticlesIndex] =  article;
+					if (article == null) {
+						break;
+					}
+
+					if (article.sub.contains(searchKeyword) || article.con.contains(searchKeyword)) {
+						searchResultArticles[searchResultAticlesIndex] = article;
 						searchResultAticlesIndex++;
 					}
 				}
-				
-				if(searchResultArticles.length == 0) {
+				if (searchResultArticles.length == 0) {
 					System.out.println("검색결과가 존재하지 않습니다.");
+					continue;
+				}
+				System.out.println("번호 / 제목");
+
+				int itemsInAPage = 10;
+				int startPos = searchResultArticles.length - 1;
+				startPos -= (page - 1) * itemsInAPage;
+				int endPos = startPos - (itemsInAPage - 1);
+
+				if (endPos < 0) {
+					endPos = 0;
 				}
 
-			}
+				if (startPos < 0) {
+					System.out.printf("%d페이지는 존재하지 않습니다.\n", page);
+					continue;
+				}
 
-//			else if (command.startsWith("search ")) {
-//				String inputId = command.split(" ")[1];
-//				int inputPage = Integer.parseInt(command.split(" ")[2]);
-//				System.out.println("==게시물 검색==");
-//
-//				if (inputPage <= 1) {
-//					inputPage = 1;
-//				}
-//
-//				int page = 10;
-//				int start = size() - 1;
-//				start -= (inputPage - 1) * page;
-//				int end = start - (page - 1);
-//
-//				if (end < 0) {
-//					end = 0;
-//				}
-//
-//				for (int i = start; i >= end; i--) {
-//					Article article = articles[i];
-//
-//					if (articles[i].sub.contains(inputId) || articles[i].con.contains(inputId)) {
-//						System.out.println(article.no + " / " + article.sub);
-//					}					
-//				}
-//				if (start <0) {
-//					System.out.println(inputId+"페이지는 존재하지 않습니다.");
-//				}
-//
-//			}
+				for (int i = startPos; i >= endPos; i--) {
+					Article article = searchResultArticles[i];
+
+					System.out.printf("%d / %s\n", article.no, article.sub);
+				}
+			}
 
 			else if (command.equals("exit")) {
 				System.out.println("==프로그램 종료==");
