@@ -5,65 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.sbs.example.easytextboard.container.Container;
-import com.sbs.example.easytextboard.controller.MemberController;
 import com.sbs.example.easytextboard.dto.Article;
-import com.sbs.example.easytextboard.dto.Member;
+import com.sbs.example.easytextboard.service.ArticleService;
 
 public class ArticleController {
-
-	List<Article> articles = new ArrayList<>();
-
-	private int no;
-
-	private int getIndexById(int id) {
-		for (int i = 0; i < articles.size(); i++) {
-			if (articles.get(i).no == id) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	private Article getArticle(int id) {
-		int index = getIndexById(id);
-
-		if (index == -1) {
-			return null;
-		}
-		return articles.get(index);
-	}
-
+	private ArticleService articleService;
+	
 	public ArticleController() {
-
-		no = 0;
-
-		for (int i = 0; i < 32; i++) {
-			add(i % 2 == 0 ? 1 : 2, "제목" + (i + 1), "내용" + (i + 1));
-		}
+		articleService = Container.artcleService;
 	}
-
-	private int add(int memberId, String sub, String con) {
-		Article article = new Article();
-
-		article.no = no + 1;
-		article.memberId = memberId;
-		article.sub = sub;
-		article.con = con;
-		articles.add(article);
-
-		no = article.no;
-		return article.no;
-	}
-
-	private void remove(int id) {
-		int index = getIndexById(id);
-		if (index == -1) {
-			return;
-		}
-
-		articles.remove(index);
-	}
-
 	public void run(Scanner scan, String command) {
 
 		if (command.equals("article add")) {
@@ -79,7 +29,7 @@ public class ArticleController {
 			System.out.printf("내용: ");
 			String sub = scan.nextLine();
 
-			int id = add(Container.session.loginedMemberId, sub, con);
+			int id = articleService.add(Container.session.loginedMemberId, sub, con);
 
 			System.out.println(id + "번 게시물이 생성 되었습니다.");
 		}
@@ -189,14 +139,13 @@ public class ArticleController {
 				return;
 			}
 
-			System.out.printf("게시물 번호: " + articles.get(inputId - 1));
+			System.out.printf("게시물 번호: " + article.no);
 			System.out.printf("제목: ");
 			String sub = scan.nextLine();
 			System.out.printf("내용: ");
 			String con = scan.nextLine();
 
-			article.sub = sub;
-			article.con = con;
+			modify(inputId, sub, con);
 
 		}
 
@@ -250,7 +199,5 @@ public class ArticleController {
 		else {
 			System.out.println("**명령어 오류");
 		}
-
 	}
-
 }
