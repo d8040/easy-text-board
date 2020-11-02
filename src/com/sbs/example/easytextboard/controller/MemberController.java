@@ -1,82 +1,47 @@
 package com.sbs.example.easytextboard.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
+import com.sbs.example.easytextboard.container.Container;
 import com.sbs.example.easytextboard.dto.Member;
+import com.sbs.example.easytextboard.service.MemberService;
 
 public class MemberController extends Controller {
-
-	List<Member> members;
-	private int memberNo;
-
+	private MemberService memberService;
+	
 	public MemberController() {
-		memberNo = 0;
-		members = new ArrayList<>();
-
-		for (int i = 0; i < 3; i++) {
-			join("user" + (i + 1), "user" + (i + 1), "유저" + i);
-		}
+		memberService = Container.memberService;
 	}
-
-	private Member getMemberByLoginId(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return member;
-			}
-		}
-		return null;
-	}
-
-	private int join(String logId, String logPw, String name) {
-		Member member = new Member();
-
-		member.no = memberNo + 1;
-
-		member.loginId = logId;
-		member.loginPw = logPw;
-		member.name = name;
-		members.add(member);
-		memberNo = member.no;
-
-		return member.no;
-	}
-
-	private boolean isExistLoginId(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isJoinAvailableLoginId(String loginId) {
-		for (Member member : members) {
-			if (member.loginId.equals(loginId)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	Member member = null;
 
 	public void run(Scanner scan, String command) {
+		if (command.equals("member whoami")) {
+			if (Container.session.isLogout()) {
+				System.out.println("로그아웃 상태입니다.");
+				return;
+			}
+			int loginedMemberId = Container.session.loginedMemberId;
+			System.out.printf("당신의 회원번호는 %d번 입니다.\n", loginedMemberId);
+		}
 
 		if (command.equals("member login")) {
 			System.out.println("== 로그인 ==");
 
+			if (Container.session.isLogined()) {
+				System.out.println("이미 로그인 되었습니다.");
+				return;
+			}
+
 			String loginId = "";
 			String loginPw;
 
-			int loginPwMaxCount = 3;
-			int loginPwCount = 0;
-			boolean loginPwIsValid = false;
+			int loginIdMaxCount = 3;
+			int loginIdCount = 0;
+			boolean loginIdIsValid = false;
+			
+			Member member = null;
 
 			while (true) {
-				if (loginPwMaxCount <= loginPwCount) {
+				if (loginIdMaxCount <= loginIdCount) {
 					System.out.println("다음에 다시 시도해 주세요.");
 					break;
 				}
@@ -85,23 +50,27 @@ public class MemberController extends Controller {
 				loginId = scan.nextLine().trim();
 
 				if (loginId.length() == 0) {
-					loginPwCount++;
+					loginIdCount++;
 					continue;
 				}
-				member = getMemberByLoginId(loginId);
+				member = memberService.getMemberByLoginId(loginId);
 
 				if (member == null) {
-					loginPwCount++;
+					loginIdCount++;
 					System.out.println(loginId + "(은)는 존재하지 않는 아이디입니다.");
 					continue;
 				}
-				loginPwIsValid = true;
+				loginIdIsValid = true;
 				break;
 			}
 
-			if (loginPwIsValid == false) {
+			if (loginIdIsValid == false) {
 				return;
 			}
+			int loginPwMaxCount = 3;
+			int loginPwCount = 0;
+			boolean loginPwIsValid = false;
+
 			while (true) {
 				if (loginPwMaxCount <= loginPwCount) {
 					System.out.println("다음에 다시 시도해 주세요.");
@@ -126,9 +95,7 @@ public class MemberController extends Controller {
 			if (loginPwIsValid == false) {
 				return;
 			}
-
-			System.out.printf("로그인 되었습니다. %s님 환영합니다.\n", member.name);
-
+			Container.session.loginedMemberId = member.no;
 		}
 		if (command.equals("member join")) {
 			System.out.println("== 회원가입 ==");
@@ -153,7 +120,7 @@ public class MemberController extends Controller {
 				if (loginId.length() == 0) {
 					loginIdCount++;
 					continue;
-				} else if (isJoinAvailableLoginId(loginId) == false) {
+				} else if (memberService.isJoinAvailableLoginId(loginId) == false) {
 					loginIdCount++;
 					System.out.println(loginId + "(은)는 이미 사용중인 아이디 입니다.");
 					continue;
@@ -184,7 +151,7 @@ public class MemberController extends Controller {
 				break;
 			}
 
-			int id = join(loginId, loginPw, name);
+			int id = memberService.join(loginId, loginPw, name);
 
 			System.out.println(id + "번 회원이 생성되었습니다.");
 		}

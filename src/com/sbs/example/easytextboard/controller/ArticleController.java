@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.sbs.example.easytextboard.container.Container;
 import com.sbs.example.easytextboard.controller.MemberController;
 import com.sbs.example.easytextboard.dto.Article;
 import com.sbs.example.easytextboard.dto.Member;
@@ -37,14 +38,15 @@ public class ArticleController {
 		no = 0;
 
 		for (int i = 0; i < 32; i++) {
-			add("제목" + (i + 1), "내용" + (i + 1));
+			add(i % 2 == 0 ? 1 : 2, "제목" + (i + 1), "내용" + (i + 1));
 		}
 	}
 
-	private int add(String sub, String con) {
+	private int add(int memberId, String sub, String con) {
 		Article article = new Article();
 
 		article.no = no + 1;
+		article.memberId = memberId;
 		article.sub = sub;
 		article.con = con;
 		articles.add(article);
@@ -67,23 +69,29 @@ public class ArticleController {
 		if (command.equals("article add")) {
 			System.out.println("==게시물 등록==");
 
+			if (Container.session.isLogout()) {
+				System.out.println("로그인 후 이용해 주세요");
+				return;
+			}
+
 			System.out.printf("제목: ");
 			String con = scan.nextLine();
 			System.out.printf("내용: ");
 			String sub = scan.nextLine();
 
-			int id = add(sub, con);
+			int id = add(Container.session.loginedMemberId, sub, con);
 
 			System.out.println(id + "번 게시물이 생성 되었습니다.");
 		}
 
 		else if (command.equals("article list")) {
-			System.out.println("==게시물 등록==");
+			System.out.println("==게시물 리스트==");
 
-			System.out.println("번호 / 제목");
+			System.out.println("번호 / 작성자 / 제목");
 
 			for (int i = articles.size() - 1; i >= 0; i--) {
-				System.out.println(articles.get(i).no + " / " + articles.get(i).sub);
+				Article article = articles.get(i);
+				System.out.printf("%d / %s / %s\n", article.no, article.memberId, article.sub);
 			}
 		}
 
@@ -109,10 +117,11 @@ public class ArticleController {
 				end = 0;
 			}
 
-			System.out.println("번호 / 제목");
+			System.out.println("번호 / 작성자 / 제목");
 
 			for (int i = start; i >= end; i--) {
-				System.out.println(articles.get(i).no + " / " + articles.get(i).sub);
+				Article article = articles.get(i);
+				System.out.printf("%d / %s / %s\n", article.no, article.memberId, article.sub);
 			}
 			if (start < 0) {
 				System.out.println(inputId + "페이지는 존재하지 않습니다.");
@@ -144,6 +153,11 @@ public class ArticleController {
 		}
 
 		else if (command.startsWith("article del ")) {
+			if (Container.session.isLogout()) {
+				System.out.println("로그인 후 이용해 주세요");
+				return;
+			}
+
 			int inputId = Integer.parseInt(command.split(" ")[2]);
 			System.out.println("==게시물 삭제==");
 
@@ -160,6 +174,11 @@ public class ArticleController {
 		}
 
 		else if (command.startsWith("article modify ")) {
+			if (Container.session.isLogout()) {
+				System.out.println("로그인 후 이용해 주세요");
+				return;
+			}
+
 			int inputId = Integer.parseInt(command.split(" ")[2]);
 			System.out.println("==게시물 수정==");
 
